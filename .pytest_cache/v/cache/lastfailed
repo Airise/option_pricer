@@ -1,0 +1,7 @@
+{
+  "tests/test_binomial.py": true,
+  "tests/test_black_scholes.py": true,
+  "tests/test_implied_vol.py": true,
+  "tests/test_mc.py": true,
+  "tests/test_qmc_kiko.py": true
+}
