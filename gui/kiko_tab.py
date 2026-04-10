@@ -14,20 +14,18 @@ def create_tab(notebook: ttk.Notebook, result_writer):
     s0_e = labeled_entry(frame, 0, "S0", "100")
     sigma_e = labeled_entry(frame, 1, "sigma", "0.2")
     r_e = labeled_entry(frame, 2, "r", "0.05")
-    q_e = labeled_entry(frame, 3, "q", "0.0")
-    t_e = labeled_entry(frame, 4, "T", "1.0")
-    k_e = labeled_entry(frame, 5, "K", "100")
-    l_e = labeled_entry(frame, 6, "L (knock-in)", "80")
-    u_e = labeled_entry(frame, 7, "U (knock-out)", "120")
-    rebate_e = labeled_entry(frame, 8, "R (rebate)", "2")
-    n_mon_e = labeled_entry(frame, 9, "n_monitors", "52")
-    n_paths_e = labeled_entry(frame, 10, "n_paths", "20000")
+    t_e = labeled_entry(frame, 3, "T", "1.0")
+    k_e = labeled_entry(frame, 4, "K", "100")
+    l_e = labeled_entry(frame, 5, "L (knock-in)", "80")
+    u_e = labeled_entry(frame, 6, "U (knock-out)", "120")
+    rebate_e = labeled_entry(frame, 7, "R (rebate)", "2")
+    n_mon_e = labeled_entry(frame, 8, "n_monitors", "52")
+    n_paths_e = labeled_entry(frame, 9, "n_paths", "20000")
 
     def on_calc():
         s0 = require_positive(parse_float(s0_e, "S0"), "S0")
         sigma = require_non_negative(parse_float(sigma_e, "sigma"), "sigma")
         r = parse_float(r_e, "r")
-        q = parse_float(q_e, "q")
         t = require_positive(parse_float(t_e, "T"), "T")
         k = require_positive(parse_float(k_e, "K"), "K")
         l = parse_float(l_e, "L")
@@ -39,7 +37,7 @@ def create_tab(notebook: ttk.Notebook, result_writer):
         if not (l < s0 < u):
             raise ValueError("KIKO 参数需满足 L < S0 < U")
 
-        md = MarketData(s0=s0, sigma=sigma, r=r, q=q, t=t, k=k)
+        md = MarketData(s0=s0, sigma=sigma, r=r, q=0.0, t=t, k=k)
         opt = KIKOPutOption(
             option_type="put",
             market_data=md,

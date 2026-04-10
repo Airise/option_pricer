@@ -44,22 +44,23 @@ class QuasiMonteCarloEngine:
 
             knocked_out = False
             knocked_in = False
+            tau_out = m.t
 
-            for s in path:
+            for step_idx, s in enumerate(path):
                 if s >= opt.u:
                     knocked_out = True
+                    tau_out = (step_idx + 1) * (m.t / opt.n_monitors)
                     break
                 if s <= opt.l:
                     knocked_in = True
 
             if knocked_out:
-                payoff = opt.rebate
+                discounted.append(math.exp(-m.r * tau_out) * opt.rebate)
             elif knocked_in:
                 payoff = max(m.k - path[-1], 0.0)
+                discounted.append(math.exp(-m.r * m.t) * payoff)
             else:
-                payoff = 0.0
-
-            discounted.append(math.exp(-m.r * m.t) * payoff)
+                discounted.append(0.0)
 
         n = len(discounted)
         mean = sum(discounted) / n
