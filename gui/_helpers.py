@@ -4,10 +4,10 @@ from tkinter import ttk
 
 
 def labeled_entry(parent: tk.Widget, row: int, label: str, default: str) -> tk.Entry:
-    ttk.Label(parent, text=label).grid(row=row, column=0, sticky="w", padx=4, pady=3)
+    ttk.Label(parent, text=label).grid(row=row, column=0, sticky="w", padx=(32, 16), pady=10)
     e = ttk.Entry(parent)
     e.insert(0, default)
-    e.grid(row=row, column=1, sticky="ew", padx=4, pady=3)
+    e.grid(row=row, column=1, sticky="ew", padx=(0, 32), pady=10)
     return e
 
 

@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 
 from engines.implied_volatility import implied_volatility
-from ._helpers import labeled_entry, parse_float, require_positive, wrap_action
+from ._helpers import labeled_entry, parse_float, parse_int, require_non_negative, require_positive, require_unit_interval, wrap_action
 
 
 def create_tab(notebook: ttk.Notebook, result_writer):
@@ -17,9 +17,9 @@ def create_tab(notebook: ttk.Notebook, result_writer):
     k_e = labeled_entry(frame, 4, "K", "100")
     p_e = labeled_entry(frame, 5, "market_price", "10")
 
-    ttk.Label(frame, text="option_type").grid(row=6, column=0, sticky="w", padx=4, pady=3)
+    ttk.Label(frame, text="option_type").grid(row=6, column=0, sticky="w", padx=(32, 16), pady=10)
     opt_type = tk.StringVar(value="call")
-    ttk.Combobox(frame, textvariable=opt_type, values=["call", "put"], state="readonly").grid(row=6, column=1, sticky="ew", padx=4, pady=3)
+    ttk.Combobox(frame, textvariable=opt_type, values=["call", "put"], state="readonly").grid(row=6, column=1, sticky="ew", padx=(0, 32), pady=10)
 
     def on_calc():
         market_price = parse_float(p_e, "market_price")
@@ -43,6 +43,6 @@ def create_tab(notebook: ttk.Notebook, result_writer):
         )
         result_writer(f"[隐含波动率 {opt_type.get()}] sigma = {iv:.6f}")
 
-    ttk.Button(frame, text="计算隐含波动率", command=wrap_action(on_calc, result_writer)).grid(row=7, column=0, columnspan=2, pady=8)
+    ttk.Button(frame, text="计算隐含波动率", command=wrap_action(on_calc, result_writer)).grid(row=7, column=0, columnspan=2, pady=(24, 32))
 
     return frame

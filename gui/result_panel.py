@@ -4,11 +4,25 @@ from tkinter import ttk
 
 class ResultPanel:
     def __init__(self, parent: tk.Widget):
-        frame = ttk.LabelFrame(parent, text="结果")
-        frame.pack(fill="both", expand=False, padx=8, pady=8)
+        frame = ttk.Frame(parent, style="App.TFrame")
+        frame.pack(fill="both", expand=False, pady=(24, 0))
 
-        self.text = tk.Text(frame, height=10, width=100)
-        self.text.pack(fill="both", expand=True, padx=6, pady=6)
+        # 标题
+        ttk.Label(frame, text="Terminal Output", style="ResultTitle.TLabel").pack(anchor="w", pady=(0, 12))
+
+        # 文本框外层容器（用于实现细边框效果）
+        text_container = tk.Frame(frame, bg="#e2e8f0", padx=1, pady=1)
+        text_container.pack(fill="both", expand=True)
+
+        # 极客/高级感的深色终端输出框
+        self.text = tk.Text(text_container, height=10, width=100,
+                            font=("Cascadia Code", 10),
+                            bg="#0f172a",
+                            fg="#f8fafc",
+                            relief="flat",
+                            highlightthickness=0,
+                            padx=20, pady=20)
+        self.text.pack(fill="both", expand=True)
         self.text.configure(state="disabled")
 
     def write(self, message: str) -> None:

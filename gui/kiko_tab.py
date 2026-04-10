@@ -3,7 +3,7 @@ from tkinter import ttk
 from core.market_data import MarketData
 from core.option import KIKOPutOption
 from engines.quasi_monte_carlo import QuasiMonteCarloEngine
-from ._helpers import labeled_entry, parse_float, parse_int, require_non_negative, require_positive, wrap_action
+from ._helpers import labeled_entry, parse_float, parse_int, require_non_negative, require_positive, require_unit_interval, wrap_action
 
 
 def create_tab(notebook: ttk.Notebook, result_writer):
@@ -56,6 +56,6 @@ def create_tab(notebook: ttk.Notebook, result_writer):
         delta = QuasiMonteCarloEngine.kiko_delta(opt, n_paths // 2)
         result_writer(f"[KIKO put] 价格 = {price:.6f}, 95% CI = [{ci[0]:.6f}, {ci[1]:.6f}], Delta = {delta:.6f}")
 
-    ttk.Button(frame, text="计算价格与Delta", command=wrap_action(on_calc, result_writer)).grid(row=11, column=0, columnspan=2, pady=8)
+    ttk.Button(frame, text="计算价格与Delta", command=wrap_action(on_calc, result_writer)).grid(row=11, column=0, columnspan=2, pady=(24, 32))
 
     return frame

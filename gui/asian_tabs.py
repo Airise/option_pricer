@@ -5,7 +5,7 @@ from core.market_data import MarketData
 from core.option import ArithmeticAsianOption, GeometricAsianOption
 from engines.closed_form import ClosedFormEngine
 from engines.monte_carlo import MonteCarloEngine
-from ._helpers import labeled_entry, parse_float, parse_int, require_non_negative, require_positive, wrap_action
+from ._helpers import labeled_entry, parse_float, parse_int, require_non_negative, require_positive, require_unit_interval, wrap_action
 
 
 def create_geometric_asian_tab(notebook: ttk.Notebook, result_writer):
@@ -21,9 +21,9 @@ def create_geometric_asian_tab(notebook: ttk.Notebook, result_writer):
     k_e = labeled_entry(frame, 5, "K", "100")
     n_e = labeled_entry(frame, 6, "n_obs", "12")
 
-    ttk.Label(frame, text="option_type").grid(row=7, column=0, sticky="w", padx=4, pady=3)
+    ttk.Label(frame, text="option_type").grid(row=7, column=0, sticky="w", padx=(32, 16), pady=10)
     opt_type = tk.StringVar(value="call")
-    ttk.Combobox(frame, textvariable=opt_type, values=["call", "put"], state="readonly").grid(row=7, column=1, sticky="ew", padx=4, pady=3)
+    ttk.Combobox(frame, textvariable=opt_type, values=["call", "put"], state="readonly").grid(row=7, column=1, sticky="ew", padx=(0, 32), pady=10)
 
     def on_calc():
         s0 = require_positive(parse_float(s0_e, "S0"), "S0")
@@ -41,7 +41,7 @@ def create_geometric_asian_tab(notebook: ttk.Notebook, result_writer):
         price = ClosedFormEngine.geometric_asian(opt)
         result_writer(f"[几何亚式 {opt_type.get()}] 价格 = {price:.6f}")
 
-    ttk.Button(frame, text="计算价格", command=wrap_action(on_calc, result_writer)).grid(row=8, column=0, columnspan=2, pady=8)
+    ttk.Button(frame, text="计算价格", command=wrap_action(on_calc, result_writer)).grid(row=8, column=0, columnspan=2, pady=(24, 32))
 
     return frame
 
@@ -60,12 +60,12 @@ def create_arithmetic_asian_tab(notebook: ttk.Notebook, result_writer):
     n_obs_e = labeled_entry(frame, 6, "n_obs", "12")
     n_paths_e = labeled_entry(frame, 7, "n_paths", "50000")
 
-    ttk.Label(frame, text="option_type").grid(row=8, column=0, sticky="w", padx=4, pady=3)
+    ttk.Label(frame, text="option_type").grid(row=8, column=0, sticky="w", padx=(32, 16), pady=10)
     opt_type = tk.StringVar(value="call")
-    ttk.Combobox(frame, textvariable=opt_type, values=["call", "put"], state="readonly").grid(row=8, column=1, sticky="ew", padx=4, pady=3)
+    ttk.Combobox(frame, textvariable=opt_type, values=["call", "put"], state="readonly").grid(row=8, column=1, sticky="ew", padx=(0, 32), pady=10)
 
     control_var = tk.BooleanVar(value=True)
-    ttk.Checkbutton(frame, text="使用控制变量（几何亚式）", variable=control_var).grid(row=9, column=0, columnspan=2, sticky="w", padx=4, pady=3)
+    ttk.Checkbutton(frame, text="使用控制变量（几何亚式）", variable=control_var).grid(row=9, column=0, columnspan=2, sticky="w", padx=(32, 32), pady=10)
 
     def on_calc():
         s0 = require_positive(parse_float(s0_e, "S0"), "S0")
@@ -92,6 +92,6 @@ def create_arithmetic_asian_tab(notebook: ttk.Notebook, result_writer):
         price, ci = MonteCarloEngine.arithmetic_asian(opt)
         result_writer(f"[算术亚式 {opt_type.get()}] 价格 = {price:.6f}, 95% CI = [{ci[0]:.6f}, {ci[1]:.6f}]")
 
-    ttk.Button(frame, text="计算价格", command=wrap_action(on_calc, result_writer)).grid(row=10, column=0, columnspan=2, pady=8)
+    ttk.Button(frame, text="计算价格", command=wrap_action(on_calc, result_writer)).grid(row=10, column=0, columnspan=2, pady=(24, 32))
 
     return frame

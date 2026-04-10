@@ -4,7 +4,7 @@ from tkinter import ttk
 from core.market_data import MarketData
 from core.option import AmericanOption
 from engines.binomial_tree import BinomialTreeEngine
-from ._helpers import labeled_entry, parse_float, parse_int, require_positive, wrap_action
+from ._helpers import labeled_entry, parse_float, parse_int, require_non_negative, require_positive, require_unit_interval, wrap_action
 
 
 def create_tab(notebook: ttk.Notebook, result_writer):
@@ -19,9 +19,9 @@ def create_tab(notebook: ttk.Notebook, result_writer):
     k_e = labeled_entry(frame, 4, "K", "100")
     n_e = labeled_entry(frame, 5, "steps", "200")
 
-    ttk.Label(frame, text="option_type").grid(row=6, column=0, sticky="w", padx=4, pady=3)
+    ttk.Label(frame, text="option_type").grid(row=6, column=0, sticky="w", padx=(32, 16), pady=10)
     opt_type = tk.StringVar(value="put")
-    ttk.Combobox(frame, textvariable=opt_type, values=["call", "put"], state="readonly").grid(row=6, column=1, sticky="ew", padx=4, pady=3)
+    ttk.Combobox(frame, textvariable=opt_type, values=["call", "put"], state="readonly").grid(row=6, column=1, sticky="ew", padx=(0, 32), pady=10)
 
     def on_calc():
         s0 = require_positive(parse_float(s0_e, "S0"), "S0")
@@ -38,6 +38,6 @@ def create_tab(notebook: ttk.Notebook, result_writer):
         price = BinomialTreeEngine.american(opt, steps)
         result_writer(f"[美式 {opt_type.get()}] 价格 = {price:.6f}")
 
-    ttk.Button(frame, text="计算价格", command=wrap_action(on_calc, result_writer)).grid(row=7, column=0, columnspan=2, pady=8)
+    ttk.Button(frame, text="计算价格", command=wrap_action(on_calc, result_writer)).grid(row=7, column=0, columnspan=2, pady=(24, 32))
 
     return frame
