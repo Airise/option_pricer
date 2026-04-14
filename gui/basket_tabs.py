@@ -22,12 +22,12 @@ def _common_two_asset_inputs(frame):
 
 def create_geometric_basket_tab(notebook: ttk.Notebook, result_writer):
     frame = ttk.Frame(notebook)
-    notebook.add(frame, text="几何篮子")
+    notebook.add(frame, text="Geometric Basket")
     frame.columnconfigure(1, weight=1)
 
     s01_e, sigma1_e, s02_e, sigma2_e, r_e, t_e, k_e, rho_e = _common_two_asset_inputs(frame)
 
-    ttk.Label(frame, text="option_type").grid(row=8, column=0, sticky="w", padx=(32, 16), pady=10)
+    ttk.Label(frame, text="Option Type").grid(row=8, column=0, sticky="w", padx=(32, 16), pady=10)
     opt_type = tk.StringVar(value="call")
     ttk.Combobox(frame, textvariable=opt_type, values=["call", "put"], state="readonly").grid(row=8, column=1, sticky="ew", padx=(0, 32), pady=10)
 
@@ -53,27 +53,27 @@ def create_geometric_basket_tab(notebook: ttk.Notebook, result_writer):
         )
         opt = GeometricBasketOption(option_type=opt_type.get(), market_data=md)
         price = ClosedFormEngine.geometric_basket(opt)
-        result_writer(f"[几何篮子 {opt_type.get()}] 价格 = {price:.6f}")
+        result_writer(f"[Geometric Basket {opt_type.get()}] Price = {price:.6f}")
 
-    ttk.Button(frame, text="计算价格", command=wrap_action(on_calc, result_writer)).grid(row=9, column=0, columnspan=2, pady=(24, 32))
+    ttk.Button(frame, text="Calculate Price", command=wrap_action(on_calc, result_writer)).grid(row=9, column=0, columnspan=2, pady=(24, 32))
 
     return frame
 
 
 def create_arithmetic_basket_tab(notebook: ttk.Notebook, result_writer):
     frame = ttk.Frame(notebook)
-    notebook.add(frame, text="算术篮子")
+    notebook.add(frame, text="Arithmetic Basket")
     frame.columnconfigure(1, weight=1)
 
     s01_e, sigma1_e, s02_e, sigma2_e, r_e, t_e, k_e, rho_e = _common_two_asset_inputs(frame)
     n_paths_e = labeled_entry(frame, 8, "n_paths", "50000")
 
-    ttk.Label(frame, text="option_type").grid(row=9, column=0, sticky="w", padx=(32, 16), pady=10)
+    ttk.Label(frame, text="Option Type").grid(row=9, column=0, sticky="w", padx=(32, 16), pady=10)
     opt_type = tk.StringVar(value="call")
     ttk.Combobox(frame, textvariable=opt_type, values=["call", "put"], state="readonly").grid(row=9, column=1, sticky="ew", padx=(0, 32), pady=10)
 
     control_var = tk.BooleanVar(value=True)
-    ttk.Checkbutton(frame, text="使用控制变量（几何篮子）", variable=control_var).grid(row=10, column=0, columnspan=2, sticky="w", padx=(32, 32), pady=10)
+    ttk.Checkbutton(frame, text="Use Control Variate (Geometric Basket)", variable=control_var).grid(row=10, column=0, columnspan=2, sticky="w", padx=(32, 32), pady=10)
 
     def on_calc():
         s01 = require_positive(parse_float(s01_e, "S01"), "S01")
@@ -86,7 +86,7 @@ def create_arithmetic_basket_tab(notebook: ttk.Notebook, result_writer):
         rho = require_unit_interval(parse_float(rho_e, "rho"), "rho")
         n_paths = parse_int(n_paths_e, "n_paths")
         if n_paths <= 0:
-            raise ValueError("n_paths 必须大于 0")
+            raise ValueError("n_paths must be greater than 0")
 
         md = TwoAssetMarketData(
             s01=s01,
@@ -105,8 +105,8 @@ def create_arithmetic_basket_tab(notebook: ttk.Notebook, result_writer):
             control_variate=control_var.get(),
         )
         price, ci = MonteCarloEngine.arithmetic_basket(opt)
-        result_writer(f"[算术篮子 {opt_type.get()}] 价格 = {price:.6f}, 95% CI = [{ci[0]:.6f}, {ci[1]:.6f}]")
+        result_writer(f"[Arithmetic Basket {opt_type.get()}] Price = {price:.6f}, 95% CI = [{ci[0]:.6f}, {ci[1]:.6f}]")
 
-    ttk.Button(frame, text="计算价格", command=wrap_action(on_calc, result_writer)).grid(row=11, column=0, columnspan=2, pady=(24, 32))
+    ttk.Button(frame, text="Calculate Price", command=wrap_action(on_calc, result_writer)).grid(row=11, column=0, columnspan=2, pady=(24, 32))
 
     return frame

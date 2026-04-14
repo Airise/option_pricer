@@ -9,7 +9,7 @@ from ._helpers import labeled_entry, parse_float, parse_int, require_non_negativ
 
 def create_tab(notebook: ttk.Notebook, result_writer):
     frame = ttk.Frame(notebook)
-    notebook.add(frame, text="欧式期权")
+    notebook.add(frame, text="European")
     frame.columnconfigure(1, weight=1)
 
     s0_e = labeled_entry(frame, 0, "S0", "100")
@@ -19,7 +19,7 @@ def create_tab(notebook: ttk.Notebook, result_writer):
     t_e = labeled_entry(frame, 4, "T", "1.0")
     k_e = labeled_entry(frame, 5, "K", "100")
 
-    ttk.Label(frame, text="option_type").grid(row=6, column=0, sticky="w", padx=(32, 16), pady=10)
+    ttk.Label(frame, text="Option Type").grid(row=6, column=0, sticky="w", padx=(32, 16), pady=10)
     opt_type = tk.StringVar(value="call")
     ttk.Combobox(frame, textvariable=opt_type, values=["call", "put"], state="readonly").grid(row=6, column=1, sticky="ew", padx=(0, 32), pady=10)
 
@@ -41,8 +41,8 @@ def create_tab(notebook: ttk.Notebook, result_writer):
         )
         opt = EuropeanOption(option_type=opt_type.get(), market_data=md)
         price = ClosedFormEngine.european(opt)
-        result_writer(f"[欧式 {opt_type.get()}] 价格 = {price:.6f}")
+        result_writer(f"[European {opt_type.get()}] Price = {price:.6f}")
 
-    ttk.Button(frame, text="计算价格", command=wrap_action(on_calc, result_writer)).grid(row=7, column=0, columnspan=2, pady=(24, 32))
+    ttk.Button(frame, text="Calculate Price", command=wrap_action(on_calc, result_writer)).grid(row=7, column=0, columnspan=2, pady=(24, 32))
 
     return frame

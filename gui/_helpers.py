@@ -15,31 +15,31 @@ def parse_float(entry: tk.Entry, name: str) -> float:
     try:
         return float(entry.get())
     except ValueError as exc:
-        raise ValueError(f"{name} 必须是数字") from exc
+        raise ValueError(f"{name} must be a number") from exc
 
 
 def parse_int(entry: tk.Entry, name: str) -> int:
     try:
         return int(entry.get())
     except ValueError as exc:
-        raise ValueError(f"{name} 必须是整数") from exc
+        raise ValueError(f"{name} must be an integer") from exc
 
 
 def require_positive(value: float, name: str) -> float:
     if value <= 0:
-        raise ValueError(f"{name} 必须大于 0")
+        raise ValueError(f"{name} must be greater than 0")
     return value
 
 
 def require_non_negative(value: float, name: str) -> float:
     if value < 0:
-        raise ValueError(f"{name} 不能为负数")
+        raise ValueError(f"{name} cannot be negative")
     return value
 
 
 def require_unit_interval(value: float, name: str) -> float:
     if value < -1.0 or value > 1.0:
-        raise ValueError(f"{name} 必须在 [-1, 1] 区间")
+        raise ValueError(f"{name} must be in the [-1, 1] interval")
     return value
 
 
@@ -48,6 +48,6 @@ def wrap_action(callback: Callable[[], None], on_error: Callable[[str], None]) -
         try:
             callback()
         except Exception as exc:
-            on_error(f"错误: {exc}")
+            on_error(f"Error: {exc}")
 
     return _inner

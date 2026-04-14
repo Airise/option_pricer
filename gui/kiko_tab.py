@@ -8,7 +8,7 @@ from ._helpers import labeled_entry, parse_float, parse_int, require_non_negativ
 
 def create_tab(notebook: ttk.Notebook, result_writer):
     frame = ttk.Frame(notebook)
-    notebook.add(frame, text="KIKO 看跌")
+    notebook.add(frame, text="KIKO Put")
     frame.columnconfigure(1, weight=1)
 
     s0_e = labeled_entry(frame, 0, "S0", "100")
@@ -33,9 +33,9 @@ def create_tab(notebook: ttk.Notebook, result_writer):
         rebate = require_non_negative(parse_float(rebate_e, "R"), "R")
         n_monitors = parse_int(n_mon_e, "n_monitors")
         if n_monitors <= 0:
-            raise ValueError("n_monitors 必须大于 0")
+            raise ValueError("n_monitors must be greater than 0")
         if not (l < s0 < u):
-            raise ValueError("KIKO 参数需满足 L < S0 < U")
+            raise ValueError("KIKO parameters must satisfy L < S0 < U")
 
         md = MarketData(s0=s0, sigma=sigma, r=r, q=0.0, t=t, k=k)
         opt = KIKOPutOption(
@@ -49,11 +49,11 @@ def create_tab(notebook: ttk.Notebook, result_writer):
 
         n_paths = parse_int(n_paths_e, "n_paths")
         if n_paths <= 0:
-            raise ValueError("n_paths 必须大于 0")
+            raise ValueError("n_paths must be greater than 0")
         price, ci = QuasiMonteCarloEngine.kiko_price(opt, n_paths)
         delta = QuasiMonteCarloEngine.kiko_delta(opt, n_paths // 2)
-        result_writer(f"[KIKO put] 价格 = {price:.6f}, 95% CI = [{ci[0]:.6f}, {ci[1]:.6f}], Delta = {delta:.6f}")
+        result_writer(f"[KIKO put] Price = {price:.6f}, 95% CI = [{ci[0]:.6f}, {ci[1]:.6f}], Delta = {delta:.6f}")
 
-    ttk.Button(frame, text="计算价格与Delta", command=wrap_action(on_calc, result_writer)).grid(row=11, column=0, columnspan=2, pady=(24, 32))
+    ttk.Button(frame, text="Calculate Price & Delta", command=wrap_action(on_calc, result_writer)).grid(row=11, column=0, columnspan=2, pady=(24, 32))
 
     return frame
